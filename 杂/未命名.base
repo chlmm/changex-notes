@@ -1,0 +1,14 @@
+views:
+  - type: table
+    name: 表格
+  - type: cards
+    name: 视图
+  - type: list
+    name: 视图 2
+    filters:
+      and:
+        - file.inFolder("杂")
+    order:
+      - file.name
+      - file.embeds
+      - file.tags
