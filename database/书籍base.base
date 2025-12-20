@@ -1,0 +1,9 @@
+views:
+  - type: table
+    name: 表格
+    filters:
+      and:
+        - file.inFolder("书籍")
+    order:
+      - file.name
+      - author
