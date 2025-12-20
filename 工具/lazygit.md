@@ -1,3 +1,6 @@
+---
+url:
+---
 ### 1. Lazygit 核心架构图
 ```mermaid
 graph TD
