@@ -18,6 +18,23 @@ This skill provides comprehensive git workflow best practices, branching strateg
 - Resolving merge conflicts
 - Setting up git hooks and automation
 
+## Workflow Diagrams
+
+Visual workflow guides for common Git operations:
+
+| Workflow | Description | Frequency | File |
+|----------|-------------|-----------|------|
+| **Overview** | Git 全流程全景图 | - | [workflows/overview.md](workflows/overview.md) |
+| **Basic Commit** | 从修改到推送的基础流程 | ⭐⭐⭐⭐⭐ | [workflows/basic-commit.md](workflows/basic-commit.md) |
+| **Branch Collaboration** | 特性分支团队协作 | ⭐⭐⭐⭐⭐ | [workflows/branch-collaboration.md](workflows/branch-collaboration.md) |
+| **Code Review** | 现代团队代码审查流程 | ⭐⭐⭐⭐⭐ | [workflows/code-review.md](workflows/code-review.md) |
+| **Merge Conflict** | 解决代码冲突 | ⭐⭐⭐⭐ | [workflows/merge-conflict.md](workflows/merge-conflict.md) |
+| **Undo Operations** | 撤销修改和回退 | ⭐⭐⭐⭐ | [workflows/undo-operations.md](workflows/undo-operations.md) |
+| **Release & Tagging** | 版本发布和热修复 | ⭐⭐⭐⭐ | [workflows/release-tagging.md](workflows/release-tagging.md) |
+| **Rebase Workflow** | 使用 rebase 保持历史整洁 | ⭐⭐⭐ | [workflows/rebase-workflow.md](workflows/rebase-workflow.md) |
+| **Submodule** | 子模块管理 | ⭐⭐ | [workflows/submodule.md](workflows/submodule.md) |
+| **Disaster Recovery** | 误操作数据恢复 | ⭐ | [workflows/disaster-recovery.md](workflows/disaster-recovery.md) |
+
 ## Core Workflows
 
 ### Commit Message Guidelines
