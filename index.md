@@ -40,3 +40,8 @@ https://github.com/rbetree/MarksVault   MarksVault
 修真四万年 漫画  https://www.baozimh.com/comic/xiuzhensimonian-sanfudongman
 
 因缘指点当如是，救得人间薄命花
+
+https://www.chongbuluo.com/thread-7807-1-1.html
+https://rsseverything.com/zh/sharedfeeds
+https://www.chongbuluo.com/thread-20203-1-1.html
+https://www.sci-fifans.net/
