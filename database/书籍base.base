@@ -3,8 +3,17 @@ views:
     name: 表格
     filters:
       and:
-        - file.inFolder("书籍")
+        - file.inFolder("Resource/书籍学习")
+        - file.hasProperty("tags")
     order:
       - file.name
       - author
       - file.folder
+  - type: cards
+    name: 视图
+    filters:
+      and:
+        - file.inFolder("Resource/书籍学习")
+        - file.hasProperty("author")
+    order:
+      - title
