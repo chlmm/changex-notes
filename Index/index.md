@@ -45,3 +45,10 @@ https://www.chongbuluo.com/thread-7807-1-1.html
 https://rsseverything.com/zh/sharedfeeds
 https://www.chongbuluo.com/thread-20203-1-1.html
 https://www.sci-fifans.net/
+
+
+可以考虑多使用 BMAD 和 OPENSPEC 这类，并且自己维护一份当前项目的长期需求和状态文档.
+
+https://blog.huan666.de/posts/ai-coding-understanding-2025-summary/
+
+https://blog.huan666.de/posts/shipping-at-inference-speed-deep-dive/
