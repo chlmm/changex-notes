@@ -1,0 +1,128 @@
+#ifndef UDP_MODULE_H
+#define UDP_MODULE_H
+
+#include <string>
+#include <functional>
+#include <thread>
+#include <mutex>
+#include <atomic>
+
+// Platform-specific socket headers
+#ifdef _WIN32
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    #pragma comment(lib, "ws2_32.lib")
+    typedef int socklen_t;
+#else
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <unistd.h>
+    #include <fcntl.h>
+    #include <errno.h>
+    #define SOCKET int
+    #define INVALID_SOCKET (-1)
+    #define SOCKET_ERROR (-1)
+    #define closesocket close
+#endif
+
+{{NAMESPACE_BEGIN}}
+
+enum class UdpMode {
+    UNICAST,
+    BROADCAST,
+    MULTICAST
+};
+
+enum class UdpState {
+    UNINITIALIZED,
+    INITIALIZED,
+    RUNNING,
+    STOPPED,
+    ERROR
+};
+
+class {{CLASS_NAME}} {
+public:
+    using ReceiveCallback = std::function<void(const char* data, size_t size,
+                                                const std::string& from_ip,
+                                                uint16_t from_port)>;
+
+    {{CLASS_NAME}}();
+    ~{{CLASS_NAME}}();
+
+    // Non-copyable
+    {{CLASS_NAME}}(const {{CLASS_NAME}}&) = delete;
+    {{CLASS_NAME}}& operator=(const {{CLASS_NAME}}&) = delete;
+
+    // Moveable
+    {{CLASS_NAME}}({{CLASS_NAME}}&& other) noexcept;
+    {{CLASS_NAME}}& operator=({{CLASS_NAME}}&& other) noexcept;
+
+    // Lifecycle
+    bool init(uint16_t port, UdpMode mode = UdpMode::UNICAST);
+    bool start();
+    void stop();
+
+    // Configuration
+    bool joinMulticastGroup(const std::string& group);
+    bool leaveMulticastGroup(const std::string& group);
+    bool setBroadcast(bool enable);
+    void setReceiveCallback(ReceiveCallback callback);
+    void setReceiveTimeout(int milliseconds);
+
+    // Operations
+    bool send(const char* data, size_t size,
+              const std::string& ip, uint16_t port);
+    bool sendToMulticast(const char* data, size_t size, uint16_t port);
+    bool sendBroadcast(const char* data, size_t size, uint16_t port);
+
+    // Status
+    UdpState getState() const { return state_; }
+    bool isRunning() const { return running_.load(); }
+    uint16_t getLocalPort() const { return local_port_; }
+    UdpMode getMode() const { return mode_; }
+
+private:
+    void receiveLoop();
+    void cleanup();
+    bool createSocket();
+    bool bindSocket();
+    bool joinMulticastGroupInternal(const std::string& group);
+    bool leaveMulticastGroupInternal(const std::string& group);
+    void wakeupRecvThread();
+
+    // Socket handle
+    SOCKET socket_fd_;
+
+    // Threading
+    std::thread receive_thread_;
+    std::mutex mutex_;
+    std::mutex callback_mutex_;
+
+    // Callback
+    ReceiveCallback callback_;
+
+    // State
+    std::atomic<bool> running_;
+    std::atomic<UdpState> state_;
+
+    // Configuration
+    UdpMode mode_;
+    uint16_t local_port_;
+    std::string multicast_group_;
+    int receive_timeout_ms_;
+    bool broadcast_enabled_;
+
+    // Constants
+    static constexpr size_t MAX_BUFFER_SIZE = {{BUFFER_SIZE}};
+
+#ifdef _WIN32
+    static bool winsock_initialized_;
+    static bool initializeWinsock();
+#endif
+};
+
+{{NAMESPACE_END}}
+
+#endif // UDP_MODULE_H

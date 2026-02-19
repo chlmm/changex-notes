@@ -1,0 +1,92 @@
+#include "{{HEADER_FILE}}"
+#include <iostream>
+#include <chrono>
+#include <thread>
+
+{{NAMESPACE_BEGIN}}
+
+void onDataReceived(const char* data, size_t size,
+                    const std::string& from_ip, uint16_t from_port) {
+    std::string msg(data, size);
+    std::cout << "[Received from " << from_ip << ":" << from_port << "] "
+              << msg << std::endl;
+}
+
+int main() {
+    // Example 1: Unicast Mode
+    {
+        std::cout << "=== Unicast Example ===" << std::endl;
+
+        {{CLASS_NAME}} udp;
+        udp.setReceiveCallback(onDataReceived);
+
+        if (!udp.init(8080, UdpMode::UNICAST)) {
+            std::cerr << "Failed to initialize UDP module" << std::endl;
+            return 1;
+        }
+
+        if (!udp.start()) {
+            std::cerr << "Failed to start UDP module" << std::endl;
+            return 1;
+        }
+
+        std::string msg = "Hello, Unicast!";
+        udp.send(msg.c_str(), msg.size(), "127.0.0.1", 8080);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        udp.stop();
+    }
+
+    // Example 2: Broadcast Mode
+    {
+        std::cout << "\n=== Broadcast Example ===" << std::endl;
+
+        {{CLASS_NAME}} udp;
+        udp.setReceiveCallback(onDataReceived);
+
+        if (!udp.init(8081, UdpMode::BROADCAST)) {
+            std::cerr << "Failed to initialize UDP module" << std::endl;
+            return 1;
+        }
+
+        if (!udp.start()) {
+            std::cerr << "Failed to start UDP module" << std::endl;
+            return 1;
+        }
+
+        std::string msg = "Hello, Broadcast!";
+        udp.sendBroadcast(msg.c_str(), msg.size(), 8081);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        udp.stop();
+    }
+
+    // Example 3: Multicast Mode
+    {
+        std::cout << "\n=== Multicast Example ===" << std::endl;
+
+        {{CLASS_NAME}} udp;
+        udp.setReceiveCallback(onDataReceived);
+        udp.joinMulticastGroup("239.255.0.1");
+
+        if (!udp.init(8082, UdpMode::MULTICAST)) {
+            std::cerr << "Failed to initialize UDP module" << std::endl;
+            return 1;
+        }
+
+        if (!udp.start()) {
+            std::cerr << "Failed to start UDP module" << std::endl;
+            return 1;
+        }
+
+        std::string msg = "Hello, Multicast!";
+        udp.sendToMulticast(msg.c_str(), msg.size(), 8082);
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        udp.stop();
+    }
+
+    return 0;
+}
+
+{{NAMESPACE_END}}

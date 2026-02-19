@@ -1,0 +1,401 @@
+#include "{{HEADER_FILE}}"
+#include <iostream>
+#include <cstring>
+
+#ifndef _WIN32
+    #include <pthread.h>
+    #include <signal.h>
+#endif
+
+{{NAMESPACE_BEGIN}}
+
+#ifdef _WIN32
+bool {{CLASS_NAME}}::winsock_initialized_ = {{CLASS_NAME}}::initializeWinsock();
+
+bool {{CLASS_NAME}}::initializeWinsock() {
+    WSADATA wsaData;
+    return WSAStartup(MAKEWORD(2, 2), &wsaData) == 0;
+}
+#endif
+
+{{CLASS_NAME}}::{{CLASS_NAME}}()
+    : socket_fd_(INVALID_SOCKET)
+    , running_(false)
+    , state_(UdpState::UNINITIALIZED)
+    , mode_(UdpMode::UNICAST)
+    , local_port_(0)
+    , receive_timeout_ms_({{TIMEOUT}})
+    , broadcast_enabled_(false) {
+}
+
+{{CLASS_NAME}}::~{{CLASS_NAME}}() {
+    stop();
+    cleanup();
+}
+
+{{CLASS_NAME}}::{{CLASS_NAME}}({{CLASS_NAME}}&& other) noexcept
+    : socket_fd_(other.socket_fd_)
+    , receive_thread_(std::move(other.receive_thread_))
+    , callback_(std::move(other.callback_))
+    , running_(other.running_.load())
+    , state_(other.state_.load())
+    , mode_(other.mode_)
+    , local_port_(other.local_port_)
+    , multicast_group_(std::move(other.multicast_group_))
+    , receive_timeout_ms_(other.receive_timeout_ms_)
+    , broadcast_enabled_(other.broadcast_enabled_) {
+    other.socket_fd_ = INVALID_SOCKET;
+    other.running_ = false;
+    other.state_ = UdpState::UNINITIALIZED;
+}
+
+{{CLASS_NAME}}& {{CLASS_NAME}}::operator=({{CLASS_NAME}}&& other) noexcept {
+    if (this != &other) {
+        stop();
+        cleanup();
+
+        socket_fd_ = other.socket_fd_;
+        receive_thread_ = std::move(other.receive_thread_);
+        callback_ = std::move(other.callback_);
+        running_ = other.running_.load();
+        state_ = other.state_.load();
+        mode_ = other.mode_;
+        local_port_ = other.local_port_;
+        multicast_group_ = std::move(other.multicast_group_);
+        receive_timeout_ms_ = other.receive_timeout_ms_;
+        broadcast_enabled_ = other.broadcast_enabled_;
+
+        other.socket_fd_ = INVALID_SOCKET;
+        other.running_ = false;
+        other.state_ = UdpState::UNINITIALIZED;
+    }
+    return *this;
+}
+
+bool {{CLASS_NAME}}::init(uint16_t port, UdpMode mode) {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    if (state_ != UdpState::UNINITIALIZED && state_ != UdpState::STOPPED) {
+        std::cerr << "[UdpModule] Already initialized" << std::endl;
+        return false;
+    }
+
+    mode_ = mode;
+    local_port_ = port;
+
+    if (!createSocket()) {
+        return false;
+    }
+
+    if (!bindSocket()) {
+        cleanup();
+        return false;
+    }
+
+    state_ = UdpState::INITIALIZED;
+    return true;
+}
+
+bool {{CLASS_NAME}}::createSocket() {
+    socket_fd_ = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (socket_fd_ == INVALID_SOCKET) {
+        std::cerr << "[UdpModule] Failed to create socket" << std::endl;
+        return false;
+    }
+
+    int opt = 1;
+
+    if (mode_ == UdpMode::BROADCAST) {
+        if (setsockopt(socket_fd_, SOL_SOCKET, SO_BROADCAST,
+                       reinterpret_cast<const char*>(&opt), sizeof(opt)) != 0) {
+            std::cerr << "[UdpModule] Failed to set broadcast option" << std::endl;
+            return false;
+        }
+        broadcast_enabled_ = true;
+    }
+
+    if (mode_ == UdpMode::MULTICAST) {
+        if (setsockopt(socket_fd_, SOL_SOCKET, SO_REUSEADDR,
+                       reinterpret_cast<const char*>(&opt), sizeof(opt)) != 0) {
+            std::cerr << "[UdpModule] Failed to set reuse address option" << std::endl;
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool {{CLASS_NAME}}::bindSocket() {
+    sockaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(local_port_);
+
+    if (mode_ == UdpMode::MULTICAST && !multicast_group_.empty()) {
+        addr.sin_addr.s_addr = inet_addr(multicast_group_.c_str());
+    } else {
+        addr.sin_addr.s_addr = INADDR_ANY;
+    }
+
+    if (bind(socket_fd_, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0) {
+        std::cerr << "[UdpModule] Failed to bind socket to port " << local_port_ << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool {{CLASS_NAME}}::start() {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    if (state_ == UdpState::RUNNING) {
+        std::cerr << "[UdpModule] Already running" << std::endl;
+        return true;
+    }
+
+    if (state_ != UdpState::INITIALIZED) {
+        std::cerr << "[UdpModule] Not initialized. Call init() first." << std::endl;
+        return false;
+    }
+
+    if (mode_ == UdpMode::MULTICAST && !multicast_group_.empty()) {
+        if (!joinMulticastGroupInternal(multicast_group_)) {
+            state_ = UdpState::ERROR;
+            return false;
+        }
+    }
+
+    running_ = true;
+    state_ = UdpState::RUNNING;
+    receive_thread_ = std::thread(&{{CLASS_NAME}}::receiveLoop, this);
+
+    return true;
+}
+
+void {{CLASS_NAME}}::stop() {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    if (state_ != UdpState::RUNNING) {
+        return;
+    }
+
+    running_ = false;
+
+    if (mode_ == UdpMode::MULTICAST && !multicast_group_.empty()) {
+        leaveMulticastGroupInternal(multicast_group_);
+    }
+
+    wakeupRecvThread();
+
+    if (receive_thread_.joinable()) {
+        receive_thread_.join();
+    }
+
+    cleanup();
+    state_ = UdpState::STOPPED;
+}
+
+void {{CLASS_NAME}}::receiveLoop() {
+#ifndef _WIN32
+    pthread_setname_np(pthread_self(), "UdpRecvThread");
+#endif
+
+    char buffer[MAX_BUFFER_SIZE];
+
+#ifdef _WIN32
+    DWORD timeout = receive_timeout_ms_;
+    setsockopt(socket_fd_, SOL_SOCKET, SO_RCVTIMEO,
+               reinterpret_cast<const char*>(&timeout), sizeof(timeout));
+#else
+    timeval tv{};
+    tv.tv_sec = receive_timeout_ms_ / 1000;
+    tv.tv_usec = (receive_timeout_ms_ % 1000) * 1000;
+    setsockopt(socket_fd_, SOL_SOCKET, SO_RCVTIMEO,
+               reinterpret_cast<const char*>(&tv), sizeof(tv));
+#endif
+
+    while (running_.load()) {
+        sockaddr_in from_addr{};
+        socklen_t from_len = sizeof(from_addr);
+
+        ssize_t received = recvfrom(socket_fd_, buffer, MAX_BUFFER_SIZE, 0,
+                                    reinterpret_cast<sockaddr*>(&from_addr), &from_len);
+
+        if (received > 0) {
+            std::string from_ip = inet_ntoa(from_addr.sin_addr);
+            uint16_t from_port = ntohs(from_addr.sin_port);
+
+            std::lock_guard<std::mutex> cb_lock(callback_mutex_);
+            if (callback_) {
+                try {
+                    callback_(buffer, static_cast<size_t>(received), from_ip, from_port);
+                } catch (...) {
+                    // Callback exceptions should not crash the receive thread
+                }
+            }
+        } else if (received < 0) {
+#ifdef _WIN32
+            int error = WSAGetLastError();
+            if (error != WSAETIMEDOUT && error != WSAEINTR) {
+                std::cerr << "[UdpModule] recvfrom error: " << error << std::endl;
+            }
+#else
+            if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR) {
+                std::cerr << "[UdpModule] recvfrom error: " << strerror(errno) << std::endl;
+            }
+#endif
+        }
+    }
+}
+
+bool {{CLASS_NAME}}::send(const char* data, size_t size,
+                        const std::string& ip, uint16_t port) {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    if (state_ != UdpState::RUNNING) {
+        std::cerr << "[UdpModule] Cannot send: module not running" << std::endl;
+        return false;
+    }
+
+    sockaddr_in dest_addr{};
+    dest_addr.sin_family = AF_INET;
+    dest_addr.sin_port = htons(port);
+    dest_addr.sin_addr.s_addr = inet_addr(ip.c_str());
+
+    int retries = 3;
+    while (retries-- > 0) {
+        ssize_t sent = sendto(socket_fd_, data, static_cast<int>(size), 0,
+                              reinterpret_cast<sockaddr*>(&dest_addr), sizeof(dest_addr));
+
+        if (sent == static_cast<ssize_t>(size)) {
+            return true;
+        }
+
+#ifdef _WIN32
+        int error = WSAGetLastError();
+        if (error == WSAEINTR) continue;
+        if (error == WSAENOBUFS || error == WSAEWOULDBLOCK) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            continue;
+        }
+        std::cerr << "[UdpModule] sendto error: " << error << std::endl;
+#else
+        if (errno == EINTR) continue;
+        if (errno == ENOBUFS || errno == EAGAIN) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            continue;
+        }
+        std::cerr << "[UdpModule] sendto error: " << strerror(errno) << std::endl;
+#endif
+        break;
+    }
+
+    return false;
+}
+
+bool {{CLASS_NAME}}::sendToMulticast(const char* data, size_t size, uint16_t port) {
+    if (mode_ != UdpMode::MULTICAST || multicast_group_.empty()) {
+        std::cerr << "[UdpModule] Not in multicast mode or no group set" << std::endl;
+        return false;
+    }
+    return send(data, size, multicast_group_, port);
+}
+
+bool {{CLASS_NAME}}::sendBroadcast(const char* data, size_t size, uint16_t port) {
+    if (!broadcast_enabled_) {
+        std::cerr << "[UdpModule] Broadcast not enabled" << std::endl;
+        return false;
+    }
+    return send(data, size, "255.255.255.255", port);
+}
+
+bool {{CLASS_NAME}}::joinMulticastGroup(const std::string& group) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    multicast_group_ = group;
+
+    if (state_ == UdpState::RUNNING) {
+        return joinMulticastGroupInternal(group);
+    }
+    return true;
+}
+
+bool {{CLASS_NAME}}::joinMulticastGroupInternal(const std::string& group) {
+    ip_mreq mreq{};
+    mreq.imr_multiaddr.s_addr = inet_addr(group.c_str());
+    mreq.imr_interface.s_addr = INADDR_ANY;
+
+    if (setsockopt(socket_fd_, IPPROTO_IP, IP_ADD_MEMBERSHIP,
+                   reinterpret_cast<const char*>(&mreq), sizeof(mreq)) != 0) {
+        std::cerr << "[UdpModule] Failed to join multicast group: " << group << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool {{CLASS_NAME}}::leaveMulticastGroup(const std::string& group) {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    if (state_ == UdpState::RUNNING) {
+        return leaveMulticastGroupInternal(group);
+    }
+    return true;
+}
+
+bool {{CLASS_NAME}}::leaveMulticastGroupInternal(const std::string& group) {
+    ip_mreq mreq{};
+    mreq.imr_multiaddr.s_addr = inet_addr(group.c_str());
+    mreq.imr_interface.s_addr = INADDR_ANY;
+
+    if (setsockopt(socket_fd_, IPPROTO_IP, IP_DROP_MEMBERSHIP,
+                   reinterpret_cast<const char*>(&mreq), sizeof(mreq)) != 0) {
+        std::cerr << "[UdpModule] Failed to leave multicast group: " << group << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool {{CLASS_NAME}}::setBroadcast(bool enable) {
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    int opt = enable ? 1 : 0;
+    if (setsockopt(socket_fd_, SOL_SOCKET, SO_BROADCAST,
+                   reinterpret_cast<const char*>(&opt), sizeof(opt)) != 0) {
+        std::cerr << "[UdpModule] Failed to set broadcast option" << std::endl;
+        return false;
+    }
+
+    broadcast_enabled_ = enable;
+    return true;
+}
+
+void {{CLASS_NAME}}::setReceiveCallback(ReceiveCallback callback) {
+    std::lock_guard<std::mutex> lock(callback_mutex_);
+    callback_ = callback;
+}
+
+void {{CLASS_NAME}}::setReceiveTimeout(int milliseconds) {
+    receive_timeout_ms_ = milliseconds;
+}
+
+void {{CLASS_NAME}}::cleanup() {
+    if (socket_fd_ != INVALID_SOCKET) {
+        shutdown(socket_fd_, SHUT_RDWR);
+        closesocket(socket_fd_);
+        socket_fd_ = INVALID_SOCKET;
+    }
+}
+
+void {{CLASS_NAME}}::wakeupRecvThread() {
+    if (socket_fd_ != INVALID_SOCKET && local_port_ > 0) {
+        char dummy = 0;
+        sockaddr_in addr{};
+        addr.sin_family = AF_INET;
+        addr.sin_port = htons(local_port_);
+        addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+        sendto(socket_fd_, &dummy, 1, 0,
+               reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
+    }
+}
+
+{{NAMESPACE_END}}
