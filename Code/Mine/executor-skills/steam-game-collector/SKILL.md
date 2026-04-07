@@ -1,6 +1,8 @@
 ---
 name: steam-game-collector
 description: 从 Steam 获取游戏信息，生成 YAML 格式的游戏收藏记录。当用户说"收藏 Steam 游戏"、"获取游戏信息"、"添加游戏"时使用。
+type: tool
+execution_mode: executor
 ---
 
 # Steam Game Collector

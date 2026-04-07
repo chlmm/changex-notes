@@ -1,7 +1,8 @@
 ---
 name: docker
 description: Docker 容器化工具使用指南。提供容器生命周期管理、镜像操作、网络配置、数据卷管理等完整命令参考。
-execution_mode: ai
+type: tool
+execution_mode: executor
 metadata:
   category: containerization
   platform: [windows, macos, linux]

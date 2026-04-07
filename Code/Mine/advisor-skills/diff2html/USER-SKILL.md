@@ -1,7 +1,8 @@
 ---
 name: diff2html
 description: diff2html - Git diff 可视化工具。将 diff 文件转换为美观的 HTML 页面。
-execution_mode: user
+type: tool
+execution_mode: advisor
 metadata:
   category: development-tools
   platform: [windows, macos, linux]

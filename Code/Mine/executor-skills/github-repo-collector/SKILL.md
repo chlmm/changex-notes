@@ -1,6 +1,8 @@
 ---
 name: github-repo-collector
 description: 从 GitHub URL 获取仓库信息，生成 YAML 格式的项目收藏记录。当用户说"收藏 GitHub 项目"、"获取 GitHub 项目信息"、"添加 GitHub 仓库"时使用。
+type: tool
+execution_mode: executor
 ---
 
 # GitHub Repo Collector
