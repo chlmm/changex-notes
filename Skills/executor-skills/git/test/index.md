@@ -76,16 +76,23 @@ git log --oneline --graph --all
 
 ---
 
-## 三、分支管理
+## 三、Bug 修复
 
-### T07: 合并后清理分支
+### T07: Bug 修复基本流程
+
+**难度**: ⭐  
+**场景**: 生产环境发现 bug，从 `master` 拉出 `bugFix` 分支修复。修复期间没有人并行开发，修完直接合并回来，自动 fast-forward。  
+**环境脚本**: [setup-bugfix-merge.py](setup-bugfix-merge.py)  
+**验证**: `bugFix` 的修复 commit 出现在 `master` 上，历史线性，合并后可安全删除 `bugFix` 分支。
+
+### T08: Bug 修复 rebase 流程
 
 **难度**: ⭐⭐  
-**场景**: `feature/login` 已合并到 `main`，但本地和远程都还有这个分支，需要清理。  
-**环境脚本**: [setup-branch-management.py](setup-branch-management.py)  
-**验证**: `feature/login` 分支在本地和远程均已删除。
+**场景**: 生产环境发现 bug，从 `master` 拉出 `bugFix` 分支修复。修复期间 `master` 有新提交，需要用 rebase 将修复基于最新代码验证，确保修复仍然有效。  
+**环境脚本**: [setup-bugfix-rebase.py](setup-bugfix-rebase.py)  
+**验证**: `bugFix` 线性排列在 `master` 最新提交之后，修复代码在最新代码上仍然有效，合并到 `master` 为 fast-forward。
 
-### T08: 分支变基冲突
+### T09: 分支变基冲突
 
 **难度**: ⭐⭐⭐  
 **场景**: 你在 `feature/dashboard` 上开发了 3 个 commit，同时 `main` 上也有新提交，需要用 rebase 同步并解决冲突。  
@@ -96,71 +103,78 @@ git log --oneline --graph --all
 
 ## 四、合并与冲突
 
-### T09: 三方合并冲突
+### T10: 三方合并冲突
 
 **难度**: ⭐⭐⭐  
 **场景**: `main` 和 `feature/config` 都修改了 `config.yaml` 的同一区域，合并时产生冲突，需要手动解决。  
 **环境脚本**: [setup-merge-conflict.py](setup-merge-conflict.py)  
 **验证**: 合并完成，`config.yaml` 包含双方的必要修改，无冲突标记残留。
 
-### T10: Cherry-pick 特定提交
+### T11: Cherry-pick 特定提交
 
 **难度**: ⭐⭐  
 **场景**: `feature/new-api` 上有一个修复 bug 的 commit，你需要只把这个修复应用到 `main`，不要其他功能代码。  
 **环境脚本**: [setup-cherry-pick.py](setup-cherry-pick.py)  
 **验证**: `main` 上只有一个新增的 cherry-pick commit，内容仅包含 bug 修复。
 
+### T12: 合并后清理分支
+
+**难度**: ⭐⭐  
+**场景**: `feature/login` 已合并到 `main`，但本地和远程都还有这个分支，需要清理。  
+**环境脚本**: [setup-branch-management.py](setup-branch-management.py)  
+**验证**: `feature/login` 分支在本地和远程均已删除。
+
 ---
 
 ## 五、撤销与恢复
 
-### T11: 撤销未推送的提交
+### T13: 撤销未推送的提交
 
 **难度**: ⭐⭐  
 **场景**: 你在本地提交了 2 个 commit 但还没 push，发现第二个 commit 有问题，需要撤销它但保留第一个。  
 **环境脚本**: [setup-undo-commit.py](setup-undo-commit.py)  
 **验证**: 只剩下第一个 commit，第二个 commit 的修改回到工作区或被丢弃。
 
-### T12: 用 revert 回退已推送的提交
+### T14: 用 revert 回退已推送的提交
 
 **难度**: ⭐⭐⭐  
 **场景**: 你发现昨天推送的一个 commit 有 bug，但已经有人基于它开发了，不能用 reset，需要用 revert 安全回退。  
 **环境脚本**: [setup-revert-pushed.py](setup-revert-pushed.py)  
 **验证**: 产生一个新的 revert commit 撤销了 bug 引入的修改，原 commit 仍在历史中。
 
-### T13: 恢复已删除的分支
+### T15: 恢复已删除的分支
 
 **难度**: ⭐⭐⭐  
 **场景**: 你不小心用 `git branch -D` 删除了一个还未合并的分支 `feature/experimental`，需要找回来。  
 **环境脚本**: [setup-lost-commit.py](setup-lost-commit.py)  
 **验证**: `feature/experimental` 分支恢复，commit 历史完整。
 
-### T14: 找回丢失的提交
+### T16: 找回丢失的提交
 
 **难度**: ⭐⭐⭐⭐  
 **场景**: 你执行了 `git reset --hard HEAD~3`，丢失了 3 个 commit，现在需要恢复它们。  
-**环境脚本**: [setup-lost-commit.py](setup-lost-commit.py)（同 T13）  
+**环境脚本**: [setup-lost-commit.py](setup-lost-commit.py)（同 T15）  
 **验证**: 3 个丢失的 commit 全部恢复。
 
 ---
 
 ## 六、进阶操作
 
-### T15: 交互式变基整理历史
+### T17: 交互式变基整理历史
 
 **难度**: ⭐⭐⭐⭐  
 **场景**: 你的 `feature/api-v2` 分支有 5 个 commit，其中有些是 "WIP" 或 "fix typo"，需要用 interactive rebase 整理成 2 个干净的 commit。  
 **环境脚本**: [setup-interactive-rebase.py](setup-interactive-rebase.py)  
 **验证**: 分支只有 2 个 commit，message 规范，无 "WIP" 或 "fix typo"。
 
-### T16: Stash 切换分支
+### T18: Stash 切换分支
 
 **难度**: ⭐⭐  
 **场景**: 你在 `main` 上改了一半代码，突然需要切换到 `hotfix/urgent` 修一个紧急 bug。改完 bug 后切回 `main` 继续开发。  
 **环境脚本**: [setup-stash-workflow.py](setup-stash-workflow.py)  
 **验证**: `hotfix/urgent` 上有 bug 修复 commit；`main` 上恢复了之前未完成的工作。
 
-### T17: Detached HEAD 状态
+### T19: Detached HEAD 状态
 
 **难度**: ⭐⭐⭐  
 **场景**: 你 `git checkout v1.0` 进入了 detached HEAD 状态，在这里做了修改并 commit 了，需要保存这些修改到新分支。  
@@ -171,14 +185,14 @@ git log --oneline --graph --all
 
 ## 七、版本与发布
 
-### T18: 版本发布与热修复
+### T20: 版本发布与热修复
 
 **难度**: ⭐⭐⭐  
 **场景**: 项目需要在当前 `main` 打 `v2.0.0` 标签并发布。发布后发现严重 bug，需要从 `v2.0.0` 创建 `hotfix/v2.0.1` 修复后打新标签。  
 **环境脚本**: [setup-tag-release.py](setup-tag-release.py)  
 **验证**: 存在 `v2.0.0` 和 `v2.0.1` 两个标签，`hotfix/v2.0.1` 的修复已合并回 `main`。
 
-### T19: 清理误提交的大文件
+### T21: 清理误提交的大文件
 
 **难度**: ⭐⭐⭐⭐  
 **场景**: 你不小心把一个 50MB 的日志文件 `app.log` 提交到了仓库，即使删除了文件，仓库体积依然很大。需要彻底从历史中移除。  
@@ -194,17 +208,19 @@ git log --oneline --graph --all
 | 1. 提交代码到 git 平台 | T01, T02, T03 |
 | 2. 合并前拉取远程分支 | T06 |
 | 3. 新分支的创建和推送 | T05 |
-| 4. 删除分支 | T07 |
+| 4. 删除分支 | T12 |
 | 5. 拉取项目 | T05 |
 | 6. 上传代码到远程仓库 | T04 |
 | 7. 修改文件后提交 | T03 |
-| 8. 新建并切换分支 | T05, T08 |
-| 9. 合并其他分支代码 | T06, T09 |
+| 8. 新建并切换分支 | T05, T07 |
+| 9. 合并其他分支代码 | T06, T10 |
 | 10. 拉取并合并远程分支 | T06 |
 | 11. 将合并代码拉取到本地 | T06 |
-| 12. 提交代码到 master 分支 | T06, T07 |
-| 13. 删除无用分支 | T07 |
-| 14. 回调到上个版本 | T11, T12 |
+| 12. 提交代码到 master 分支 | T06, T12 |
+| 13. 删除无用分支 | T12 |
+| 14. 回调到上个版本 | T13, T14 |
+| 15. Bug 修复基本流程（无并行） | T07 |
+| 16. Bug 修复 rebase 流程（有并行） | T08 |
 
 ---
 
@@ -212,7 +228,7 @@ git log --oneline --graph --all
 
 | 难度 | 题数 | 编号 |
 |------|------|------|
-| ⭐ | 3 | T01, T02, T03 |
-| ⭐⭐ | 5 | T04, T06, T07, T10, T11, T16 |
-| ⭐⭐⭐ | 6 | T05, T08, T09, T12, T13, T17, T18 |
-| ⭐⭐⭐⭐ | 3 | T14, T15, T19 |
+| ⭐ | 4 | T01, T02, T03, T07 |
+| ⭐⭐ | 7 | T04, T06, T08, T11, T12, T13, T18 |
+| ⭐⭐⭐ | 7 | T05, T09, T10, T14, T15, T19, T20 |
+| ⭐⭐⭐⭐ | 4 | T16, T17, T21 |
