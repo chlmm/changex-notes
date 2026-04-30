@@ -1,6 +1,6 @@
-# 安装 CodeBuddy Code
+# 安装步骤
 
-## 安装 NVM (Node Version Manager)
+## 1. 安装 NVM (Node Version Manager)
 
 ```bash
 # 使用curl
@@ -10,7 +10,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 ```
 
-## 重新加载配置
+## 2. 重新加载配置
 
 根据你使用的 shell，重新加载配置文件：
 
@@ -22,26 +22,26 @@ source ~/.bashrc
 source ~/.zshrc
 ```
 
-## 安装 Node.js 18
+## 3. 安装 Node.js 18
 
 ```bash
 nvm install 18
 ```
 
-## 切换到 Node.js 18 并设为默认版本
+## 4. 切换到 Node.js 18 并设为默认版本
 
 ```bash
 nvm use 18
 nvm alias default 18
 ```
 
-## 安装 CodeBuddy Code
+## 5. 安装 CodeBuddy Code
 
 ```bash
 npm install -g @tencent-ai/codebuddy-code
 ```
 
-## 验证安装
+## 6. 验证安装
 
 检查 Node.js 版本和 CodeBuddy Code 是否安装成功：
 
