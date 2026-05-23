@@ -1,10 +1,16 @@
 ---
-title: 国士无双
 author: 骁骑校
 category: 小说/历史/架空
-tags: [书籍学习, 小说, 历史, 架空, 待分类]
+created: "2026-01-28T00:00:00Z"
+rating: 0
 status: 阅读中
-created: 2026-01-28
+tags:
+    - 书籍学习
+    - 小说
+    - 历史
+    - 架空
+    - 待分类
+title: 国士无双
 ---
 
 # 国士无双

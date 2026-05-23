@@ -1,293 +1,376 @@
 ---
-source:
-  url: https://github.com/Snouzy/workout-cool
-  name: Snouzy/workout-cool
-  title: workout.cool
-  description: 开源健身指导平台
-  stars: 0
-  language: TypeScript
-  topics: [fitness, workout, health]
-type: open-source
-tags: [开源项目, 健身]
 comment: 开源健身指导平台，大众化需求
+source:
+    description: 开源健身指导平台
+    language: TypeScript
+    name: Snouzy/workout-cool
+    stars: 0
+    title: workout.cool
+    topics:
+        - fitness
+        - workout
+        - health
+    url: https://github.com/Snouzy/workout-cool
+tags:
+    - 开源项目
+    - 健身
+type: open-source
 ---
 
 ---
-source:
-  url: https://github.com/NanmiCoder/MediaCrawler
-  name: NanmiCoder/MediaCrawler
-  title: MediaCrawler
-  description: 开源爬虫集合，爬取小红书/抖音/知乎/微博等社媒数据
-  stars: 20000
-  language: Python
-  topics: [crawler, spider, social-media]
-type: open-source
-tags: [开源项目, 爬虫]
 comment: 爬取小红书/抖音/知乎/微博等社媒数据，洞察用户需求，2万+star
+source:
+    description: 开源爬虫集合，爬取小红书/抖音/知乎/微博等社媒数据
+    language: Python
+    name: NanmiCoder/MediaCrawler
+    stars: 20000
+    title: MediaCrawler
+    topics:
+        - crawler
+        - spider
+        - social-media
+    url: https://github.com/NanmiCoder/MediaCrawler
+tags:
+    - 开源项目
+    - 爬虫
+type: open-source
 ---
 
 ---
-source:
-  url: https://github.com/mendableai/firecrawl
-  name: mendableai/firecrawl
-  title: FireCrawl
-  description: 智能爬虫工具，无需站点地图抓取所有子页面
-  stars: 0
-  language: TypeScript
-  topics: [crawler, scraper, llm]
-type: open-source
-tags: [开源项目, 爬虫, AI]
 comment: 智能爬虫工具，无需站点地图抓取所有子页面，支持JS动态内容，输出LLM-ready数据
+source:
+    description: 智能爬虫工具，无需站点地图抓取所有子页面
+    language: TypeScript
+    name: mendableai/firecrawl
+    stars: 0
+    title: FireCrawl
+    topics:
+        - crawler
+        - scraper
+        - llm
+    url: https://github.com/mendableai/firecrawl
+tags:
+    - 开源项目
+    - 爬虫
+    - AI
+type: open-source
 ---
 
 ---
-source:
-  url: https://github.com/miss-mumu/developer2gwy
-  name: miss-mumu/developer2gwy
-  title: developer2gwy
-  description: 公务员从入门到上岸，最佳程序员公考实践教程
-  stars: 0
-  language: TypeScript
-  topics: [civil-service, exam, tutorial]
-type: open-source
-tags: [开源项目, 教程]
 comment: 公务员从入门到上岸，最佳程序员公考实践教程
----
-
----
 source:
-  url: https://github.com/rbetree/MarksVault
-  name: rbetree/MarksVault
-  title: MarksVault
-  description: 书签/标记管理工具
-  stars: 0
-  language: TypeScript
-  topics: [bookmark, manager]
+    description: 公务员从入门到上岸，最佳程序员公考实践教程
+    language: TypeScript
+    name: miss-mumu/developer2gwy
+    stars: 0
+    title: developer2gwy
+    topics:
+        - civil-service
+        - exam
+        - tutorial
+    url: https://github.com/miss-mumu/developer2gwy
+tags:
+    - 开源项目
+    - 教程
 type: open-source
-tags: [开源项目, 工具]
+---
+
+---
 comment: 书签/标记管理工具
+source:
+    description: 书签/标记管理工具
+    language: TypeScript
+    name: rbetree/MarksVault
+    stars: 0
+    title: MarksVault
+    topics:
+        - bookmark
+        - manager
+    url: https://github.com/rbetree/MarksVault
+tags:
+    - 开源项目
+    - 工具
+type: ai-tool
 ---
 
 ---
-source:
-  url: https://github.com/jina-ai/MCP
-  name: jina-ai/MCP
-  title: Jina AI Remote MCP Server
-  description: Model Context Protocol server implementation by Jina AI
-  stars: 0
-  language: Python
-  topics: [mcp, ai, llm]
-type: ai-tool
-tags: [AI工具, MCP]
 comment: 可以用于扩展 AI 能力的 MCP 服务器，支持远程调用
+source:
+    description: Model Context Protocol server implementation by Jina AI
+    language: Python
+    name: jina-ai/MCP
+    stars: 0
+    title: Jina AI Remote MCP Server
+    topics:
+        - mcp
+        - ai
+        - llm
+    url: https://github.com/jina-ai/MCP
+tags:
+    - AI工具
+    - MCP
+type: ai-tool
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/raoooool/flomo-reminder
-  name: raoooool/flomo-reminder
-  title: flomo-reminder
-  description: Flomo memo reminder tool
-  stars: 0
-  language: Go
-  topics: [flomo, reminder]
+    description: Flomo memo reminder tool
+    language: Go
+    name: raoooool/flomo-reminder
+    stars: 0
+    title: flomo-reminder
+    topics:
+        - flomo
+        - reminder
+    url: https://github.com/raoooool/flomo-reminder
+tags:
+    - 工具
+    - 效率
 type: ai-tool
-tags: [工具, 效率]
-comment:
 ---
 
 ---
-source:
-  url: https://github.com/github/spec-kit
-  name: github/spec-kit
-  title: spec-kit
-  description: GitHub's spec-kit for API specifications
-  stars: 0
-  language: TypeScript
-  topics: [api, spec]
-type: ai-tool
-tags: [GitHub, API]
 comment: GitHub 官方的 API 规范工具
+source:
+    description: GitHub's spec-kit for API specifications
+    language: TypeScript
+    name: github/spec-kit
+    stars: 0
+    title: spec-kit
+    topics:
+        - api
+        - spec
+    url: https://github.com/github/spec-kit
+tags:
+    - GitHub
+    - API
+type: ai-tool
 ---
 
 ---
-source:
-  url: https://github.com/adhikasp/mcp-reddit
-  name: adhikasp/mcp-reddit
-  title: mcp-reddit
-  description: Reddit MCP 工具
-  stars: 0
-  language: Python
-  topics: [mcp, reddit, api]
-type: mcp-tool
-tags: [MCP工具, Reddit]
 comment: Reddit MCP 工具，可用于获取 Reddit 内容
----
-
----
 source:
-  url: https://github.com/Duosl/mcp-manager-website
-  name: Duosl/mcp-manager-website
-  title: MCP Manager
-  description: Chrome插件，MCP配置管理工具
-  stars: 0
-  language: TypeScript
-  topics: [mcp, chrome-extension, manager]
+    description: Reddit MCP 工具
+    language: Python
+    name: adhikasp/mcp-reddit
+    stars: 0
+    title: mcp-reddit
+    topics:
+        - mcp
+        - reddit
+        - api
+    url: https://github.com/adhikasp/mcp-reddit
+tags:
+    - MCP工具
+    - Reddit
 type: mcp-tool
-tags: [MCP工具, Chrome插件]
+---
+
+---
 comment: MCP配置管理工具，本地存储，支持导入导出
+source:
+    description: Chrome插件，MCP配置管理工具
+    language: TypeScript
+    name: Duosl/mcp-manager-website
+    stars: 0
+    title: MCP Manager
+    topics:
+        - mcp
+        - chrome-extension
+        - manager
+    url: https://github.com/Duosl/mcp-manager-website
+tags:
+    - MCP工具
+    - Chrome插件
+type: mcp-tool
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/raoooool/flomo-reminder
-  name: raoooool/flomo-reminder
-  title: flomo-reminder
-  description: 基于 github actions 的定时推送 memo 服务，灵感来自 flomo 每日提醒 功能。
-  stars: 45
-  language: TypeScript
-  topics: [github-actions]
-type: inbox
+    description: 基于 github actions 的定时推送 memo 服务，灵感来自 flomo 每日提醒 功能。
+    language: TypeScript
+    name: raoooool/flomo-reminder
+    stars: 45
+    title: flomo-reminder
+    topics:
+        - github-actions
+    url: https://github.com/raoooool/flomo-reminder
 tags: []
-comment:
+type: inbox
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/rafafields/Obsidian-Base-Hub
-  name: rafafields/Obsidian-Base-Hub
-  title: Obsidian-Base-Hub
-  description: A modular Obsidian vault leveraging native Bases to replicate relational databases functionality for personal project and task management
-  stars: 63
-  language: Unknown
-  topics: []
-type: inbox
+    description: A modular Obsidian vault leveraging native Bases to replicate relational databases functionality for personal project and task management
+    language: Unknown
+    name: rafafields/Obsidian-Base-Hub
+    stars: 63
+    title: Obsidian-Base-Hub
+    topics: []
+    url: https://github.com/rafafields/Obsidian-Base-Hub
 tags: []
-comment:
+type: inbox
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/Mordekai66/design2apps
-  name: Mordekai66/design2apps
-  title: design2apps
-  description: This project automates the conversion of Figma designs into code, supporting frameworks like Tkinter, Kivy, PyQt5, Java Swing, and C++ QT.
-  stars: 13
-  language: Python
-  topics: [code-generation, design-to-code, figma-to-code]
-type: inbox
+    description: This project automates the conversion of Figma designs into code, supporting frameworks like Tkinter, Kivy, PyQt5, Java Swing, and C++ QT.
+    language: Python
+    name: Mordekai66/design2apps
+    stars: 13
+    title: design2apps
+    topics:
+        - code-generation
+        - design-to-code
+        - figma-to-code
+    url: https://github.com/Mordekai66/design2apps
 tags: []
-comment:
+type: inbox
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/Artiicode/autogen-figma-qml
-  name: Artiicode/autogen-figma-qml
-  title: autogen-figma-qml
-  description:
-  stars: 0
-  language: Python
-  topics: []
-type: inbox
+    description: null
+    language: Python
+    name: Artiicode/autogen-figma-qml
+    stars: 0
+    title: autogen-figma-qml
+    topics: []
+    url: https://github.com/Artiicode/autogen-figma-qml
 tags: []
-comment:
+type: inbox
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/mmertama/FigmaQML
-  name: mmertama/FigmaQML
-  title: FigmaQML
-  description: Converts Figma designs to QML/QtQuick
-  stars: 267
-  language: C++
-  topics: []
-type: inbox
+    description: Converts Figma designs to QML/QtQuick
+    language: C++
+    name: mmertama/FigmaQML
+    stars: 267
+    title: FigmaQML
+    topics: []
+    url: https://github.com/mmertama/FigmaQML
 tags: []
-comment:
+type: inbox
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/MayDay-wpf/snow-cli
-  name: MayDay-wpf/snow-cli
-  title: snow-cli
-  description: Agentic coding in your terminal
-  stars: 447
-  language: TypeScript
-  topics: []
-type: inbox
+    description: Agentic coding in your terminal
+    language: TypeScript
+    name: MayDay-wpf/snow-cli
+    stars: 447
+    title: snow-cli
+    topics: []
+    url: https://github.com/MayDay-wpf/snow-cli
 tags: []
-comment:
+type: inbox
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/router-for-me/CLIProxyAPI
-  name: router-for-me/CLIProxyAPI
-  title: CLIProxyAPI
-  description: Wrap Gemini CLI, Antigravity, ChatGPT Codex, Claude Code, Qwen Code, iFlow as an OpenAI/Gemini/Claude/Codex compatible API service
-  stars: 17255
-  language: Go
-  topics: [claude-code, gemini, openai, codex, qwen3-coder]
-type: inbox
+    description: Wrap Gemini CLI, Antigravity, ChatGPT Codex, Claude Code, Qwen Code, iFlow as an OpenAI/Gemini/Claude/Codex compatible API service
+    language: Go
+    name: router-for-me/CLIProxyAPI
+    stars: 17255
+    title: CLIProxyAPI
+    topics:
+        - claude-code
+        - gemini
+        - openai
+        - codex
+        - qwen3-coder
+    url: https://github.com/router-for-me/CLIProxyAPI
 tags: []
-comment:
+type: inbox
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/Skycoder42/QtMvvm
-  name: Skycoder42/QtMvvm
-  title: QtMvvm
-  description: A mvvm oriented library for Qt, to create Projects for Widgets and Quick in parallel
-  stars: 356
-  language: C++
-  topics: [qt, widget, qml, qpm, settings, viewmodel, mvvm, mvvm-pattern]
-type: inbox
+    description: A mvvm oriented library for Qt, to create Projects for Widgets and Quick in parallel
+    language: C++
+    name: Skycoder42/QtMvvm
+    stars: 356
+    title: QtMvvm
+    topics:
+        - qt
+        - widget
+        - qml
+        - qpm
+        - settings
+        - viewmodel
+        - mvvm
+        - mvvm-pattern
+    url: https://github.com/Skycoder42/QtMvvm
 tags: []
-comment:
+type: inbox
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/zhongruan0522/AntiHub-ALL
-  name: zhongruan0522/AntiHub-ALL
-  title: AntiHub-ALL
-  description: 基于AntiHub二开的2API综合性平台，全代码开源，让 Claude、Openai 、Gemini、AWS(Kiro)的订阅套餐发挥最大价值，原生工具无缝使用。
-  stars: 409
-  language: Python
-  topics: [antigravity, kiro, antihub, codex-cli, gemini, gemini-cli]
-type: inbox
+    description: 基于AntiHub二开的2API综合性平台，全代码开源，让 Claude、Openai 、Gemini、AWS(Kiro)的订阅套餐发挥最大价值，原生工具无缝使用。
+    language: Python
+    name: zhongruan0522/AntiHub-ALL
+    stars: 409
+    title: AntiHub-ALL
+    topics:
+        - antigravity
+        - kiro
+        - antihub
+        - codex-cli
+        - gemini
+        - gemini-cli
+    url: https://github.com/zhongruan0522/AntiHub-ALL
 tags: []
-comment:
+type: inbox
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/foundersandcoders/git-workflow-workshop-for-two
-  name: foundersandcoders/git-workflow-workshop-for-two
-  title: git-workflow-workshop-for-two
-  description: An exercise for two programmers to practice git workflow skills
-  stars: 51
-  language: Unknown
-  topics: [git, workflow, workshop, github]
-type: inbox
+    description: An exercise for two programmers to practice git workflow skills
+    language: Unknown
+    name: foundersandcoders/git-workflow-workshop-for-two
+    stars: 51
+    title: git-workflow-workshop-for-two
+    topics:
+        - git
+        - workflow
+        - workshop
+        - github
+    url: https://github.com/foundersandcoders/git-workflow-workshop-for-two
 tags: []
-comment:
+type: inbox
 ---
 
 ---
+comment: null
 source:
-  url: https://github.com/RapidAI/MaClaw
-  name: RapidAI/MaClaw
-  title: MaClaw
-  description: Claude code /Gemini/Codex /OpenCode/Qoder/Codebuddy 一键配置，方便使用。
-  stars: 54
-  language: Go
-  topics: [claudecode, coder, codex, gemini, doubao, glm, kimi, minimax]
-type: inbox
+    description: Claude code /Gemini/Codex /OpenCode/Qoder/Codebuddy 一键配置，方便使用。
+    language: Go
+    name: RapidAI/MaClaw
+    stars: 54
+    title: MaClaw
+    topics:
+        - claudecode
+        - coder
+        - codex
+        - gemini
+        - doubao
+        - glm
+        - kimi
+        - minimax
+    url: https://github.com/RapidAI/MaClaw
 tags: []
-comment:
+type: inbox
 ---
